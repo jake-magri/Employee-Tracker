@@ -19,12 +19,17 @@ CREATE TABLE department (
 -- Creates role table with 4 attributes.
 -- Drops table if exists, starting fresh.
 -- Functionally tested.
+-- Added FOREGIN KEY relation to manager id.
+-- Functionally tested.
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
     title VARCHAR(30) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
-    department_id INTEGER NOT NULL
+    department_id INTEGER NOT NULL,
+    FOREIGN KEY (department_id)
+    REFERENCES department(id)
+    ON DELETE SET NULL
 );
 
 -- Creates role table with 6 attributes.
@@ -44,15 +49,3 @@ CREATE TABLE employee (
     REFERENCES employee(id)
     ON DELETE SET NULL
 );
-
--- * `employee`
-
---   * `id`: `SERIAL PRIMARY KEY`
-
---   * `first_name`: `VARCHAR(30) NOT NULL` to hold employee first name
-
---   * `last_name`: `VARCHAR(30) NOT NULL` to hold employee last name
-
---   * `role_id`: `INTEGER NOT NULL` to hold reference to employee role
-
---   * `manager_id`: `INTEGER` to hold reference to another employee that is the manager of the current employee (`null` if the employee has no manager)
