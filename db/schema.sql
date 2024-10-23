@@ -12,7 +12,7 @@ CREATE DATABASE employee_tracker_db;
 -- Functionally tested.
 DROP TABLE IF EXISTS department;
 CREATE TABLE department (
-    id SERIAL PRIMARY KEY,
+    id SERIAL PRIMARY KEY NOT NULL,
     name VARCHAR(30) UNIQUE NOT NULL
 );
 
@@ -24,12 +24,11 @@ CREATE TABLE department (
 DROP TABLE IF EXISTS role;
 CREATE TABLE role (
     id SERIAL PRIMARY KEY,
-    title VARCHAR(30) UNIQUE NOT NULL,
+    title VARCHAR(60) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
-    department_id INTEGER NOT NULL,
+    department_id INTEGER,
     FOREIGN KEY (department_id)
     REFERENCES department(id)
-    ON DELETE SET NULL
 );
 
 -- Creates role table with 6 attributes.
