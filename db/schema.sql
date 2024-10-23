@@ -22,7 +22,7 @@ CREATE TABLE department (
 -- Added FOREGIN KEY relation to manager id.
 -- Functionally tested.
 DROP TABLE IF EXISTS role;
-CREATE TABLE role (
+CREATE TABLE roles (
     id SERIAL PRIMARY KEY,
     title VARCHAR(60) UNIQUE NOT NULL,
     salary DECIMAL NOT NULL,
@@ -41,7 +41,6 @@ CREATE TABLE employee (
     id SERIAL PRIMARY KEY,
     first_name VARCHAR(30) NOT NULL,
     last_name VARCHAR(30) NOT NULL,
-    salary DECIMAL NOT NULL,
     role_id INTEGER NOT NULL,
     manager_id INTEGER,
     FOREIGN KEY (manager_id)
