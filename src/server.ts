@@ -18,12 +18,12 @@ async function startApp() {
             type: 'list',
             message: "What would you like to do?",
             choices: [
-                'View all departments', 
-                'View all roles', 
-                'View all employees', 
-                'Add a department', 
-                'Add a role', 
-                'Add an employee', 
+                'View all departments',
+                'View all roles',
+                'View all employees',
+                'Add a department',
+                'Add a role',
+                'Add an employee',
                 'Update an employee role'
             ],
             name: 'startOptions'
@@ -38,13 +38,64 @@ async function startApp() {
         // view all roles
         const result = await pool.query(`SELECT * FROM roles ORDER BY id;`);
         console.table(result.rows);
+    } else if (answers.startOptions === 'View all employees') {
+        // view all employees
+        const result = await pool.query(`SELECT * FROM employees ORDER BY id;`);
+        console.table(result.rows);
+    } else if (answers.startOptions === 'Add a department') {
+        const departmentSelection = await inquirer.prompt([
+            {
+                type: 'input',
+                message: 'Enter the name of the department',
+                name: 'departmentName'
+            },
+        ]);
+
+        if (departmentSelection) {
+            let depName = departmentSelection.departmentName;
+            pool.query(`INSERT INTO department (id, name) VALUES (name = $1);`, [depName]);
+        } else {
+            console.log('Department name can not be blank.');
+        }
+    } else if (answers.startOptions === 'Add a role') {
+        const roleSelection = await inquirer.prompt([
+            {
+                type: 'input',
+                message: 'Enter the name of the role',
+                name: 'roleName'
+            },
+            {
+                type: 'input',
+                message: 'Enter the salary of the role',
+                name: 'salaryValue'
+            },
+            {
+                type: 'input',
+                message: "What department does the role belong to?",
+                name: 'roleDepartmentName'
+            }
+        ]);
+
+        if (roleSelection) {
+            // let roleName = roleSelection.roleName;
+            // let salary = roleSelection.salaryValue;
+            let department = roleSelection.roleDepartmentName;
+            const departmentExists = await pool.query(`SELECT id FROM departments WHERE name === $1`, [department]);
+            if (departmentExists.rows.length === 0) {
+                console.log(`Department name "${department}" doesn't exist.`);
+            } else {
+                console.log('Department name exists! Add the id to the role!');
+                // pool.query(`INSERT INTO roles (title, salary, department_id) VALUES (title = $1, salary = $2, department_id = $3);`,[roleName, salary, ]);
+            }
+
+        }
+        // Add additional conditions here for other options
     }
-    // Add additional conditions here for other options
 }
 
 startApp();
 
-// view all employees 
+
 // WHEN I choose to view all employees
 // THEN I am presented with a formatted table showing employee data, including employee ids, 
 // first names, last names, job titles, departments, salaries, and managers that the employees report to
