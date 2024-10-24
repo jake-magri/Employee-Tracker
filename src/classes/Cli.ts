@@ -1,15 +1,8 @@
-// GIVEN a command-line application that accepts user input
-// WHEN I start the application
-// THEN I am presented with the following options: view all departments, view all roles, view all employees, add a department, add a role, add an employee, and update an employee role
-
-// WHEN I choose to view all departments
-// THEN I am presented with a formatted table showing department names and department ids
 import inquirer from 'inquirer';
-import Function from './functions.js';
-// view all roles,
-// WHEN I choose to view all roles
-// THEN I am presented with the job title, role id, the department that role belongs to, and the salary for that role
-async function startApp() {
+import Function from './Functions.js';
+
+class Cli {
+async startApp(): Promise<void> {
     // start prompt for user input
     const answers = await inquirer.prompt([
         {
@@ -30,18 +23,32 @@ async function startApp() {
 
     if (answers.startOptions === 'View all departments') {
         // imported method from functioons.ts
-        Function.viewAllDepartments();
+        await Function.viewAllDepartments();
+        await this.startApp();
+        return;
     } else if (answers.startOptions === 'View all roles') {
-        Function.viewAllRoles();
+        await Function.viewAllRoles();
+        await this.startApp();
+        return;
     } else if (answers.startOptions === 'View all employees') {
-        Function.viewAllEmployees();
+        await Function.viewAllEmployees();
+        await this.startApp();
+        return;
     } else if (answers.startOptions === 'Add a department') {
-        Function.addADepartment();
+        await Function.addADepartment();
+        await this.startApp();
+        return;
     } else if (answers.startOptions === 'Add an employee') {
-        Function.addAnEmployee();
+        await Function.addAnEmployee();
+        await this.startApp();
+        return;
     } else if (answers.startOptions === 'Update an employee role') {
-        Function.updateAnEmployeeRole();
+        await Function.updateAnEmployeeRole();
+        await this.startApp();
+        return;
     };
 }
+}
 
-startApp();
+let cli = new Cli;
+cli.startApp();

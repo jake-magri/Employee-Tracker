@@ -1,5 +1,5 @@
 import inquirer from 'inquirer';
-import { pool, connectToDb } from './connection.js';
+import { pool, connectToDb } from '../connection.js';
 await connectToDb();
 
 // create class with methods to update db
