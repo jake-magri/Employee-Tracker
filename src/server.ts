@@ -78,15 +78,15 @@ async function startApp() {
         ]);
 
         if (roleSelection) {
-            // let roleName = roleSelection.roleName;
-            // let salary = roleSelection.salaryValue;
+            let roleName = roleSelection.roleName;
+            let salary = roleSelection.salaryValue;
             let department = roleSelection.roleDepartmentName;
             const departmentExists = await pool.query(`SELECT id FROM departments WHERE name = $1`, [department]);
             if (departmentExists.rows.length === 0) {
                 console.log(`Department name "${department}" doesn't exist.`);
             } else {
-                console.log('Department name exists! Add the id to the role!');
-                // pool.query(`INSERT INTO roles (title, salary, department_id) VALUES (title = $1, salary = $2, department_id = $3);`,[roleName, salary, ]);
+                console.log('Role added successfully!');
+                pool.query(`INSERT INTO roles (title, salary, department_id) VALUES ( $1, $2, $3);`,[roleName, salary, departmentExists.rows[0].id]);
             }
 
         }
