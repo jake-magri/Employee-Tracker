@@ -1,7 +1,7 @@
 \c employee_tracker_db;
 
 -- Insert departments into the department table
-INSERT INTO department(name)
+INSERT INTO departments(name)
 VALUES ('Parks and Recreation'),
        ('Police'),
        ('Fire'),
@@ -13,7 +13,7 @@ VALUES ('Parks and Recreation'),
        ('City Council');
 
 -- Insert roles into the role table
-INSERT INTO role(title, salary, department_id)
+INSERT INTO roles(title, salary, department_id)
 VALUES ('Director of Parks and Rec', 100000, 1),
         ('Deputy Director of Parks and Rec', 90000, 1),
         ('Chief of Police', 100000, 2),
@@ -43,7 +43,7 @@ VALUES ('Director of Parks and Rec', 100000, 1),
         ('Maintenance Worker', 80000, 7);
 
 -- Insert employees into the employee table
-INSERT INTO employee(id, first_name, last_name, role_id, manager_id)
+INSERT INTO employees(id, first_name, last_name, role_id, manager_id)
 VALUES 
         (1, 'Chris', 'Traeger', 17, NULL),
         (2, 'Sir Benjamin', 'Wyatt', 18, 1),
