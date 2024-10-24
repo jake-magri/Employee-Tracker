@@ -53,7 +53,8 @@ async function startApp() {
 
         if (departmentSelection) {
             let depName = departmentSelection.departmentName;
-            pool.query(`INSERT INTO department (id, name) VALUES (name = $1);`, [depName]);
+            pool.query(`INSERT INTO departments (name) VALUES ($1);`, [depName]);
+            console.log(`${depName} added successfully!`)
         } else {
             console.log('Department name can not be blank.');
         }
@@ -80,7 +81,7 @@ async function startApp() {
             // let roleName = roleSelection.roleName;
             // let salary = roleSelection.salaryValue;
             let department = roleSelection.roleDepartmentName;
-            const departmentExists = await pool.query(`SELECT id FROM departments WHERE name === $1`, [department]);
+            const departmentExists = await pool.query(`SELECT id FROM departments WHERE name = $1`, [department]);
             if (departmentExists.rows.length === 0) {
                 console.log(`Department name "${department}" doesn't exist.`);
             } else {
