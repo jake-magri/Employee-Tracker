@@ -66,17 +66,17 @@ async function startApp() {
         const roleSelection = await inquirer.prompt([
             {
                 type: 'input',
-                message: 'Enter the name of the role',
+                message: 'Enter name',
                 name: 'roleName'
             },
             {
                 type: 'input',
-                message: 'Enter the salary of the role',
+                message: 'Enter salary',
                 name: 'salaryValue'
             },
             {
                 type: 'input',
-                message: "What department does the role belong to?",
+                message: "Enter department",
                 name: 'roleDepartmentName'
             }
         ]);
@@ -110,12 +110,12 @@ async function startApp() {
         const employeeSelection = await inquirer.prompt([
             {
                 type: 'input',
-                message: 'Enter employee first name',
+                message: 'Enter first name',
                 name: 'firstName'
             },
             {
                 type: 'input',
-                message: 'Enter employee last name',
+                message: 'Enter last name',
                 name: 'lastName'
             },
             {
@@ -145,9 +145,43 @@ async function startApp() {
             } else {
                 // add employee
                 pool.query(`INSERT INTO employees (first_name, last_name, role_id, manager_id) VALUES ($1, $2, $3, $4);`, [firstName, lastName, role, managerIsEmployee.rows[0].id]);
-                console.log(`Welcome new employee ${employeeSelection.firstName} ${employeeSelection.lastName} to the team!`);
+                console.log(`Welcome new employee ${employeeSelection.firstName} ${employeeSelection.lastName} to the team.`);
             }
         }        
+    } else if (answers.startOptions === 'Update an employee role') {
+        
+        // Get roles from roles table
+        const result = await pool.query('SELECT id, title FROM roles');
+        const rolesArr = result.rows;
+
+        // Map roles to choices for the prompt
+        const roleChoices = rolesArr.map((role) => ({
+            name: role.title, // Display name in the prompt
+            value: role.id // Value to be used when an option is selected
+        }));
+
+        const answers = await inquirer
+        .prompt([
+            {
+                type:'input',
+                message:'Enter employee first name',
+                name: 'firstName'
+            },
+            {
+                type:'input',
+                message:'Enter employee last name',
+                name: 'lastName'
+            },
+            {
+                type:'list',
+                message:'Select a new role',
+                name:'role',
+                choices: roleChoices
+            }
+        ]);
+        // update employee role
+        await pool.query(`UPDATE employees SET role_id = $1 WHERE first_name = $2 AND last_name = $3;`, [answers.role, answers.firstName, answers.lastName]);
+        console.log(`Employee ${answers.firstName} ${answers.lastName} updated successfully`)
     };
 }
 
