@@ -24,8 +24,11 @@ async startApp(): Promise<void> {
     if (answers.startOptions === 'View all departments') {
         // imported method from functioons.ts
         await Function.viewAllDepartments();
+        // recustive call to return user to top level prompt
+        // await to load complete table and then return prompt
         await this.startApp();
-        return;
+        // return ensures no runon code or leaking
+        return; 
     } else if (answers.startOptions === 'View all roles') {
         await Function.viewAllRoles();
         await this.startApp();
@@ -50,5 +53,6 @@ async startApp(): Promise<void> {
 }
 }
 
+// Start application
 let cli = new Cli;
 cli.startApp();

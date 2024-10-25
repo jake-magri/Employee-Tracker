@@ -1,4 +1,4 @@
-// Used activity 23 boilerplate
+// Used activity 23 pg connection boilerplate
 import dotenv from 'dotenv';
 dotenv.config();
 // Import and require Pool (node-postgres)
