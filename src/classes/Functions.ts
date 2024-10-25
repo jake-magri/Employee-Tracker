@@ -169,6 +169,84 @@ class Function {
         console.log(`Employee ${answers.firstName} ${answers.lastName} updated successfully`)
     }
 
+    // view the total utilized budget of a department—in other words, the combined salaries of all employees in that department
+    async viewTotalBudgetOfDept(): Promise<void> {
+        // get all employees roles salaries and sum them for total spend
+        const result = await pool.query(
+            `SELECT departments.name AS department_name, 
+            SUM(roles.salary) AS total_salary_spend
+            FROM employees
+            JOIN roles ON employees.role_id = roles.id
+            JOIN departments ON roles.department_id = departments.id
+            GROUP BY departments.name
+            ORDER BY departments.name;`
+        );
+        console.table(result.rows);
+    }
+
+    async startApp(): Promise<void> {
+        try {
+            // start prompt for user input
+            const answers = await inquirer.prompt([
+                {
+                    type: 'list',
+                    message: "What would you like to do?",
+                    choices: [
+                        'View all departments',
+                        'View all roles',
+                        'View all employees',
+                        'Add a department',
+                        'Add a role',
+                        'Add an employee',
+                        'Update an employee role',
+                        'View total utilized labor budget by department'
+                    ],
+                    name: 'startOptions'
+                }
+            ]);
+
+            if (answers.startOptions === 'View all departments') {
+                // imported method from functioons.ts
+                await this.viewAllDepartments();
+                // recustive call to return user to top level prompt
+                // await to load complete table and then return prompt
+                await this.startApp();
+                // return ensures no runon code or leaking
+                return;
+            } else if (answers.startOptions === 'View all roles') {
+                await this.viewAllRoles();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'View all employees') {
+                await this.viewAllEmployees();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'Add a department') {
+                await this.addADepartment();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'Add a role') {
+                await this.addARole();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'Add an employee') {
+                await this.addAnEmployee();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'Update an employee role') {
+                await this.updateAnEmployeeRole();
+                await this.startApp();
+                return;
+            } else if (answers.startOptions === 'View total utilized labor budget by department') {
+                await this.viewTotalBudgetOfDept();
+                await this.startApp();
+                return;;
+            };
+        } catch (error) {
+            console.error('Error calling Cli methods:', error);
+        }
+    }
+
 
 };
 
