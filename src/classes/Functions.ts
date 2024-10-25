@@ -5,6 +5,9 @@ await connectToDb();
 // create class with methods to update db
 
 class Cli {
+    
+    exit: boolean = false;
+    
     async viewAllDepartments(): Promise<void> {
         // view all departments with attribute aliases
         const result = await pool.query(`SELECT id AS Department_ID, departments.name AS Department_Name FROM departments ORDER BY id;`);
@@ -20,7 +23,7 @@ class Cli {
     async viewAllEmployees(): Promise<void> {
         // view all employees
         const result = await pool.query(
-            `SELECT employees.id AS id, employees.first_name, employees.last_name, COALESCE(departments.name, 'null') AS department_name, roles.title as job_title, COALESCE(manager.first_name, 'null') AS manager_fname, COALESCE(manager.last_name, 'null') AS manager_lname 
+            `SELECT employees.id AS id, employees.first_name, employees.last_name, COALESCE(departments.name, 'null') AS department_name, roles.title as job_title, COALESCE(manager.first_name, 'null') AS manager_first_name, COALESCE(manager.last_name, 'null') AS manager_last_name 
                     FROM employees
                     JOIN roles ON employees.role_id = roles.id
                     LEFT JOIN departments ON roles.department_id = departments.id 
@@ -195,7 +198,7 @@ class Cli {
         );
         console.table(result.rows);
     }
-
+    
     async startApp(): Promise<void> {
         try {
             // start prompt for user input
@@ -204,6 +207,7 @@ class Cli {
                     type: 'list',
                     message: "What would you like to do?",
                     choices: [
+                        'View total utilized labor budget by department',
                         'View all departments',
                         'View all roles',
                         'View all employees',
@@ -211,7 +215,7 @@ class Cli {
                         'Add a role',
                         'Add an employee',
                         'Update an employee role',
-                        'View total utilized labor budget by department'
+                        'Exit'
                     ],
                     name: 'startOptions'
                 }
@@ -253,6 +257,9 @@ class Cli {
                 await this.viewTotalBudgetOfDept();
                 await this.startApp();
                 return;
+            } else {
+                // Ends the process
+                process.exit(0);
             };
         } catch (error) {
             console.error('Error calling Cli methods:', error);
